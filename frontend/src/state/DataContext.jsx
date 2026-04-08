@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { apiConfig } from '../config/appConfig';
 
 const DataContext = createContext();
 
@@ -10,7 +11,7 @@ export function DataProvider({ children }) {
     const params = new URLSearchParams({ page, pageSize });
     if (q) params.set('q', q);
 
-    const res = await fetch(`/api/items?${params}`, { signal });
+    const res = await fetch(`${apiConfig.baseUrl}/items?${params}`, { signal });
     const json = await res.json();
     setItems(json.data);
     setMeta(json.meta);

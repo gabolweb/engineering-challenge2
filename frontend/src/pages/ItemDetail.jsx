@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { apiConfig } from '../config/appConfig';
 
 function ItemDetail() {
   const { id } = useParams();
@@ -9,7 +10,7 @@ function ItemDetail() {
   useEffect(() => {
     const controller = new AbortController();
 
-    fetch('/api/items/' + id, { signal: controller.signal })
+    fetch(`${apiConfig.baseUrl}/items/${id}`, { signal: controller.signal })
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(setItem)
       .catch(err => {
