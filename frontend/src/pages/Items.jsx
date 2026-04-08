@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useData } from '../state/DataContext';
 import { Link } from 'react-router-dom';
+import { FixedSizeList as List } from 'react-window';
+
+const PAGE_SIZE = 100;
+const ROW_HEIGHT = 44;
+const LIST_HEIGHT = 600;
 
 function Items() {
   const { items, meta, fetchItems } = useData();
@@ -8,11 +13,10 @@ function Items() {
   const [page, setPage] = useState(1);
 
   const loadItems = useCallback(
-    (signal) => fetchItems({ page, q: search }, signal),
+    (signal) => fetchItems({ page, pageSize: PAGE_SIZE, q: search }, signal),
     [fetchItems, page, search]
   );
 
-  // Debounce search: reset page on query change
   useEffect(() => {
     setPage(1);
   }, [search]);
@@ -31,6 +35,15 @@ function Items() {
     };
   }, [loadItems, search]);
 
+  const Row = ({ index, style }) => {
+    const item = items[index];
+    return (
+      <div style={{ ...style, display: 'flex', alignItems: 'center', padding: '0 8px', borderBottom: '1px solid #eee' }}>
+        <Link to={'/items/' + item.id}>{item.name} — ${item.price}</Link>
+      </div>
+    );
+  };
+
   return (
     <div style={{ padding: 16 }}>
       <input
@@ -44,13 +57,14 @@ function Items() {
       {!items.length ? (
         <p>{search ? 'No results found.' : 'Loading...'}</p>
       ) : (
-        <ul>
-          {items.map(item => (
-            <li key={item.id}>
-              <Link to={'/items/' + item.id}>{item.name} — ${item.price}</Link>
-            </li>
-          ))}
-        </ul>
+        <List
+          height={Math.min(LIST_HEIGHT, items.length * ROW_HEIGHT)}
+          itemCount={items.length}
+          itemSize={ROW_HEIGHT}
+          width="100%"
+        >
+          {Row}
+        </List>
       )}
 
       {meta.totalPages > 1 && (
