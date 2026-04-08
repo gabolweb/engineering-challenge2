@@ -4,7 +4,7 @@ const cors = require('cors');
 const killPort = require('kill-port');
 const path = require('path');
 const itemsRouter = require('./routes/items');
-const statsRouter = require('./routes/stats');
+const { router: statsRouter } = require('./routes/stats');
 
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 4001;
