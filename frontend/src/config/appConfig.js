@@ -9,7 +9,7 @@ export const appInfo = {
 
 // API endpoints
 export const apiConfig = {
-    baseUrl: 'http://localhost:4001/api',
+    baseUrl: '/api',
     timeout: 10000, // ms
 };
 
