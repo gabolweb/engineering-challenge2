@@ -1,7 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const killPort = require('kill-port');
 const path = require('path');
 const itemsRouter = require('./routes/items');
 const { router: statsRouter } = require('./routes/stats');
@@ -52,13 +51,4 @@ const startServer = (port) => {
     });
 };
 
-// Kill port BEFORE starting server
-killPort(PORT, 'tcp')
-    .then(() => {
-        console.log(`Port ${PORT} killed. Starting fresh server...`);
-        startServer(PORT);
-    })
-    .catch((err) => {
-        console.warn(`Port ${PORT} may not have been in use. Starting server anyway...`);
-        startServer(PORT);
-    });
+startServer(PORT);
