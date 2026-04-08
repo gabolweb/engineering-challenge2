@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useData } from '../state/DataContext';
 import { Link } from 'react-router-dom';
-import { FixedSizeList as List } from 'react-window';
+import { List } from 'react-window';
 
 const PAGE_SIZE = 100;
 const ROW_HEIGHT = 44;
