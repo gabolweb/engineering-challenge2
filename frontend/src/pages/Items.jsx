@@ -35,14 +35,14 @@ function Items() {
     };
   }, [loadItems, search]);
 
-  const Row = ({ index, style }) => {
+  const Row = React.forwardRef(({ index, style, ...rest }, ref) => {
     const item = items[index];
     return (
-      <div style={{ ...style, display: 'flex', alignItems: 'center', padding: '0 8px', borderBottom: '1px solid #eee' }}>
+      <div ref={ref} style={{ ...style, display: 'flex', alignItems: 'center', padding: '0 8px', borderBottom: '1px solid #eee' }} {...rest}>
         <Link to={'/items/' + item.id}>{item.name} — ${item.price}</Link>
       </div>
     );
-  };
+  });
 
   return (
     <div style={{ padding: 16 }}>
@@ -58,13 +58,12 @@ function Items() {
         <p>{search ? 'No results found.' : 'Loading...'}</p>
       ) : (
         <List
-          height={Math.min(LIST_HEIGHT, items.length * ROW_HEIGHT)}
-          itemCount={items.length}
-          itemSize={ROW_HEIGHT}
-          width="100%"
-        >
-          {Row}
-        </List>
+          defaultHeight={Math.min(LIST_HEIGHT, items.length * ROW_HEIGHT)}
+          rowCount={items.length}
+          rowHeight={ROW_HEIGHT}
+          rowComponent={Row}
+          rowProps={{}}
+        />
       )}
 
       {meta.totalPages > 1 && (
