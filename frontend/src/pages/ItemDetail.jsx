@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 function ItemDetail() {
   const { id } = useParams();
@@ -7,16 +7,23 @@ function ItemDetail() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/api/items/' + id)
+    const controller = new AbortController();
+
+    fetch('/api/items/' + id, { signal: controller.signal })
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(setItem)
-      .catch(() => navigate('/'));
+      .catch(err => {
+        if (err.name !== 'AbortError') navigate('/');
+      });
+
+    return () => controller.abort();
   }, [id, navigate]);
 
   if (!item) return <p>Loading...</p>;
 
   return (
-    <div style={{padding: 16}}>
+    <div style={{ padding: 16 }}>
+      <Link to="/">&larr; Back to list</Link>
       <h2>{item.name}</h2>
       <p><strong>Category:</strong> {item.category}</p>
       <p><strong>Price:</strong> ${item.price}</p>

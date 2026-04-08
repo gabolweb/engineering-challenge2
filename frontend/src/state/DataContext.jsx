@@ -4,15 +4,20 @@ const DataContext = createContext();
 
 export function DataProvider({ children }) {
   const [items, setItems] = useState([]);
+  const [meta, setMeta] = useState({ total: 0, page: 1, pageSize: 20, totalPages: 0 });
 
-  const fetchItems = useCallback(async () => {
-    const res = await fetch('/api/items?limit=500'); // Intentional bug: backend ignores limit
+  const fetchItems = useCallback(async ({ page = 1, pageSize = 20, q = '' } = {}, signal) => {
+    const params = new URLSearchParams({ page, pageSize });
+    if (q) params.set('q', q);
+
+    const res = await fetch(`/api/items?${params}`, { signal });
     const json = await res.json();
-    setItems(json);
+    setItems(json.data);
+    setMeta(json.meta);
   }, []);
 
   return (
-    <DataContext.Provider value={{ items, fetchItems }}>
+    <DataContext.Provider value={{ items, meta, fetchItems }}>
       {children}
     </DataContext.Provider>
   );
