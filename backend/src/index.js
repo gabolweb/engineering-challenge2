@@ -1,16 +1,15 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const killPort = require('kill-port');
 const path = require('path');
 const itemsRouter = require('./routes/items');
-const statsRouter = require('./routes/stats');
+const { router: statsRouter } = require('./routes/stats');
 
 const app = express();
 const PORT = parseInt(process.env.PORT, 10) || 4001;
 
 // Middleware
-app.use(cors({ origin: `http://localhost:${PORT}` }));
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -52,13 +51,8 @@ const startServer = (port) => {
     });
 };
 
-// Kill port BEFORE starting server
-killPort(PORT, 'tcp')
-    .then(() => {
-        console.log(`Port ${PORT} killed. Starting fresh server...`);
-        startServer(PORT);
-    })
-    .catch((err) => {
-        console.warn(`Port ${PORT} may not have been in use. Starting server anyway...`);
-        startServer(PORT);
-    });
+if (require.main === module) {
+    startServer(PORT);
+}
+
+module.exports = app;

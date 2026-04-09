@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-neutral-50 text-neutral-900 font-sans;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  ::selection {
+    @apply bg-neutral-900 text-white;
+  }
+}
+
+@layer components {
+  .skeleton {
+    @apply relative overflow-hidden bg-neutral-100 rounded-xl;
+  }
+
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+  }
+
+  .glass-subtle {
+    @apply bg-white/50 backdrop-blur-lg border border-neutral-200/50;
+  }
+
+  .search-input {
+    @apply w-full rounded-2xl border-0 bg-neutral-100/80 px-5 py-3.5
+           text-sm font-medium text-neutral-900 placeholder-neutral-400
+           transition-all duration-300 ease-out
+           focus:bg-white focus:shadow-glass-lg focus:ring-2 focus:ring-neutral-900/5
+           focus:outline-none;
+  }
+
+  .btn-page {
+    @apply inline-flex items-center justify-center
+           min-w-[40px] h-10 px-3
+           rounded-xl text-sm font-semibold
+           transition-all duration-200 ease-out
+           disabled:opacity-30 disabled:cursor-not-allowed
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/10;
+  }
+
+  .btn-page-default {
+    @apply btn-page text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900;
+  }
+
+  .btn-page-active {
+    @apply btn-page bg-neutral-900 text-white shadow-sm;
+  }
+
+  .card-item {
+    @apply relative rounded-2xl bg-white p-5
+           border border-neutral-100
+           shadow-card
+           transition-all duration-300 ease-out
+           hover:shadow-card-hover hover:border-neutral-200/80
+           hover:-translate-y-0.5;
+  }
+}
